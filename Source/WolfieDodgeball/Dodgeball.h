@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "WState.h"
 #include "Dodgeball.generated.h"
 
 UCLASS()
@@ -15,7 +16,7 @@ class WOLFIEDODGEBALL_API ADodgeball : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	ADodgeball();
+	ADodgeball(CharacterType Owner);
 
 protected:
 	// Called when the game starts or when spawned
@@ -44,6 +45,9 @@ public:
 	// Projectile material
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
 	UMaterialInstanceDynamic* ProjectileMaterialInstance;
+
+	UPROPERTY(EditAnyWhere)
+	CharacterType OnwerType;
 
 	// Function that initializes the projectile's velocity in the shoot direction.
 	void FireInDirection(const FVector& ShootDirection);

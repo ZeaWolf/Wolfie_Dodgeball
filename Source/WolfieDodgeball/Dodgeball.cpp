@@ -4,7 +4,7 @@
 #include "Dodgeball.h"
 
 // Sets default values
-ADodgeball::ADodgeball()
+ADodgeball::ADodgeball(CharacterType Owner)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -61,6 +61,8 @@ ADodgeball::ADodgeball()
 
 	// Delete the projectile after 3 seconds.
 	InitialLifeSpan = 3.0f;
+
+	OnwerType = Owner;
 }
 
 // Called when the game starts or when spawned
