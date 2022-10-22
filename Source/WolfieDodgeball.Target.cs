@@ -10,5 +10,7 @@ public class WolfieDodgeballTarget : TargetRules
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "WolfieDodgeball" } );
+		bOverrideBuildEnvironment = true;
+		AdditionalCompilerArguments = "-Wno-unused-but-set-variable";
 	}
 }

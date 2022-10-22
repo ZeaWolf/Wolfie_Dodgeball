@@ -74,3 +74,10 @@ Plugins/*/Intermediate/*
 DerivedDataCache/*
 
 Content/Wolfie3D
+
+# for vscode 
+.DS_Store
+.ignore
+.vscode/
+Source/.DS_Store
+WolfieDodgeball.code-workspace
