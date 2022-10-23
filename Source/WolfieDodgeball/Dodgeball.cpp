@@ -114,38 +114,39 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 
 		if (OwnerType == CharacterType::Player)
 		{
-			if (OtherActor->ActorHasTag("Wolfie"))
+			if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
 				// OtherActor::GetAttack() 
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Wolfie] hit by [Player]"));
+				Destroy();
 			}
 
-			else if (OtherActor->ActorHasTag("Guard"))
+			else if (OtherActor->ActorHasTag(FName(TEXT("Guard"))))
 			{
 				// OtherActor::GetAttack()
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] hit by [Player]"));
+				Destroy();
 			}
-			Destroy();
 		}
 
 		else if (OwnerType == CharacterType::Guard)
 		{
-			if (OtherActor->ActorHasTag("Player"))
+			if (OtherActor->ActorHasTag(FName(TEXT("Player"))))
 			{
 				// OtherActor::GetAttack()
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] hit by [Guard]"));
+				Destroy();	
 			}
-			Destroy();
 		}
 
 		else if (OwnerType == CharacterType::None)
 		{
 			// Player & Wolfie & Guard have "Character" tag with their own tag.
-			if (OtherActor->ActorHasTag("Character")) 
+			if (OtherActor->ActorHasTag(FName(TEXT("Character")))) 
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Pick up the ball."));
+				Destroy();
 			}
-			Destroy();	
 		}
 	}
 }
