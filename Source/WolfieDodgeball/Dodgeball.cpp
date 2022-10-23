@@ -32,7 +32,7 @@ ADodgeball::ADodgeball()
 		// Use this component to drive this projectile's movement.
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		ProjectileMovementComponent->InitialSpeed = 100.0f;
+		ProjectileMovementComponent->InitialSpeed = 3000.0f;
 		ProjectileMovementComponent->MaxSpeed = 3000.0f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = true;
@@ -60,9 +60,9 @@ ADodgeball::ADodgeball()
 	ProjectileMeshComponent->SetupAttachment(RootComponent);
 
 	// Delete the projectile after 3 seconds.
-	// InitialLifeSpan = 3.0f;
+	InitialLifeSpan = 10.0f;
 
-	OwnerType = CharacterType::None;
+	OwnerType = CharacterType::Player;
 }
 
 // Called when the game starts or when spawned
@@ -112,7 +112,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 		check(GEngine != nullptr);
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("HIH_2"));
 
-		if (OwnerType == CharacterType::Player)
+		if (OwnerType == CharacterType::Player && OtherActor->IsValidLowLevelFast())
 		{
 			if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
@@ -129,7 +129,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			}
 		}
 
-		else if (OwnerType == CharacterType::Guard)
+		else if (OwnerType == CharacterType::Guard && OtherActor->IsValidLowLevelFast())
 		{
 			if (OtherActor->ActorHasTag(FName(TEXT("Player"))))
 			{
@@ -139,7 +139,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			}
 		}
 
-		else if (OwnerType == CharacterType::None)
+		else if (OwnerType == CharacterType::None && OtherActor->IsValidLowLevelFast())
 		{
 			// Player & Wolfie & Guard have "Character" tag with their own tag.
 			if (OtherActor->ActorHasTag(FName(TEXT("Character")))) 
