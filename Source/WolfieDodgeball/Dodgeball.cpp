@@ -4,7 +4,7 @@
 #include "Dodgeball.h"
 
 // Sets default values
-ADodgeball::ADodgeball(CharacterType Owner)
+ADodgeball::ADodgeball()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -32,12 +32,12 @@ ADodgeball::ADodgeball(CharacterType Owner)
 		// Use this component to drive this projectile's movement.
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		ProjectileMovementComponent->InitialSpeed = 3000.0f;
+		ProjectileMovementComponent->InitialSpeed = 100.0f;
 		ProjectileMovementComponent->MaxSpeed = 3000.0f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = true;
 		ProjectileMovementComponent->Bounciness = 0.3f;
-		ProjectileMovementComponent->ProjectileGravityScale = 3.0f;
+		ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 	}
 
 	if (!ProjectileMeshComponent)
@@ -60,9 +60,9 @@ ADodgeball::ADodgeball(CharacterType Owner)
 	ProjectileMeshComponent->SetupAttachment(RootComponent);
 
 	// Delete the projectile after 3 seconds.
-	InitialLifeSpan = 3.0f;
+	// InitialLifeSpan = 3.0f;
 
-	OnwerType = Owner;
+	OwnerType = CharacterType::None;
 }
 
 // Called when the game starts or when spawned
@@ -85,13 +85,67 @@ void ADodgeball::FireInDirection(const FVector& ShootDirection)
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
 
+void ADodgeball::SetOwnerType(CharacterType Type)
+{
+	OwnerType = Type;
+}
+
 // Function that is called when the projectile hits something.
 void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
+	check(GEngine != nullptr);
+
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
-		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+		if (OwnerType == CharacterType::None)
+		{		
+			OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
+			check(GEngine != nullptr);
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Hit _ 1"));
+		}
+		destory();
 	}
 
-	//Destroy();
+	if (OtherActor != this && !OtherComponent->IsSimulatingPhysics())
+	{
+		check(GEngine != nullptr);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("HIH_2"));
+
+		if (OwnerType == CharacterType::Player)
+		{
+			if (OtherActor->ActorHasTag("Wolfie"))
+			{
+				// OtherActor::GetAttack() 
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Wolfie] hit by [Player]"));
+			}
+
+			else if (OtherActor->ActorHasTag("Guard"))
+			{
+				// OtherActor::GetAttack()
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] hit by [Player]"));
+			}
+			destory();
+		}
+
+		else if (OwnerType == CharacterType::Guard)
+		{
+			if (OtherActor->ActorHasTag("Player"))
+			{
+				// OtherActor::GetAttack()
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] hit by [Guard]"));
+			}
+			destory();
+		}
+
+		else if (OwnerType == CharacterType::None)
+		{
+			// Player & Wolfie & Guard have "Character" tag with their own tag.
+			if (OtherActor->ActorHasTag("Character")) 
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Pick up the ball."));
+			}
+			destory();	
+		}
+	}
 }

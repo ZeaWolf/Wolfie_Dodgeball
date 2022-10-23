@@ -16,7 +16,7 @@ class WOLFIEDODGEBALL_API ADodgeball : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	ADodgeball(CharacterType Owner);
+	ADodgeball();
 
 protected:
 	// Called when the game starts or when spawned
@@ -30,6 +30,10 @@ public:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
+	// Set Owner type (thrown by)
+	UFUNCTION()
+	void SetOwnerType(CharacterType type);
+	
 	// Sphere collision component.
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
 	USphereComponent* CollisionComponent;
@@ -47,7 +51,7 @@ public:
 	UMaterialInstanceDynamic* ProjectileMaterialInstance;
 
 	UPROPERTY(EditAnyWhere)
-	CharacterType OnwerType;
+	CharacterType OwnerType;
 
 	// Function that initializes the projectile's velocity in the shoot direction.
 	void FireInDirection(const FVector& ShootDirection);
