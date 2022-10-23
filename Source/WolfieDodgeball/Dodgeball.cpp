@@ -104,7 +104,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Hit _ 1"));
 		}
-		destory();
+		Destroy();
 	}
 
 	if (OtherActor != this && !OtherComponent->IsSimulatingPhysics())
@@ -125,7 +125,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				// OtherActor::GetAttack()
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] hit by [Player]"));
 			}
-			destory();
+			Destroy();
 		}
 
 		else if (OwnerType == CharacterType::Guard)
@@ -135,7 +135,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				// OtherActor::GetAttack()
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] hit by [Guard]"));
 			}
-			destory();
+			Destroy();
 		}
 
 		else if (OwnerType == CharacterType::None)
@@ -145,7 +145,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Pick up the ball."));
 			}
-			destory();	
+			Destroy();	
 		}
 	}
 }
