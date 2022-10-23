@@ -37,7 +37,7 @@ ADodgeball::ADodgeball()
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = true;
 		ProjectileMovementComponent->Bounciness = 0.3f;
-		ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
+		ProjectileMovementComponent->ProjectileGravityScale = 3.0f;
 	}
 
 	if (!ProjectileMeshComponent)
@@ -94,59 +94,78 @@ void ADodgeball::SetOwnerType(CharacterType Type)
 void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	check(GEngine != nullptr);
-
-	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
+	if (OtherActor != this)
 	{
-		if (OwnerType == CharacterType::None)
-		{		
-			OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
-			check(GEngine != nullptr);
-
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Hit _ 1"));
-		}
-		Destroy();
-	}
-
-	if (OtherActor != this && !OtherComponent->IsSimulatingPhysics())
-	{
-		check(GEngine != nullptr);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("HIH_2"));
-
+		// Player throw the ball.
 		if (OwnerType == CharacterType::Player && OtherActor->IsValidLowLevelFast())
 		{
+			// Hit Main Wolfie.
 			if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
-				// OtherActor::GetAttack() 
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Wolfie] hit by [Player]"));
-				Destroy();
+				
+				// if (MainWolfieClass* Wolfie = Cast<MainWolfieClass>(OtherActor))
+				// {
+				// 	Wolfie->OnDamaged();
+				// }
 			}
-
+			// Hit Guard Wolfie.
 			else if (OtherActor->ActorHasTag(FName(TEXT("Guard"))))
 			{
-				// OtherActor::GetAttack()
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] hit by [Player]"));
-				Destroy();
+
+				// if (GuardWolfieClass* Guard = Cast<GuardWolfieClass>(OtherActor))
+				// {
+				// 	Guard->OnDamaged();
+				// }
 			}
+			Destroy();
 		}
 
+		// Guard Wolfie throw the ball.
 		else if (OwnerType == CharacterType::Guard && OtherActor->IsValidLowLevelFast())
 		{
+			// Hit Player.
 			if (OtherActor->ActorHasTag(FName(TEXT("Player"))))
 			{
-				// OtherActor::GetAttack()
+				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
+				{
+					// Player->OnDamaged();
+				}
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] hit by [Guard]"));
-				Destroy();	
 			}
+			Destroy();
 		}
 
+		// Pick up the ball.
 		else if (OwnerType == CharacterType::None && OtherActor->IsValidLowLevelFast())
 		{
-			// Player & Wolfie & Guard have "Character" tag with their own tag.
-			if (OtherActor->ActorHasTag(FName(TEXT("Character")))) 
+			if (OtherActor->ActorHasTag(FName(TEXT("Player")))) 
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Pick up the ball."));
-				Destroy();
+				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
+				{
+					// Player->PickUpBall();
+				}
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] Pick up the ball."));
 			}
+			else if (OtherActor->ActorHasTag(FName(TEXT("Guard"))))
+			{
+				// if (GuardWolfieClass* Guard = Cast<GuardWolfieCharacter>(OtherActor))
+				// {
+				// 	Guard->PickUpBall();
+				// }
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] Pick up the ball."));
+			}
+			else if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
+			{
+				GEngine->AddOnScreenDebugMessage(01, 5.0f, FColor::Blue, TEXT("[Wolfie] Pick up the ball."));
+			}
+			Destroy();
+		}
+
+		else
+		{
+			this->SetOwnerType(CharacterType::None);
 		}
 	}
 }
