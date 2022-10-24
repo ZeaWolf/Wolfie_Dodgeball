@@ -32,7 +32,7 @@ ADodgeball::ADodgeball()
 		// Use this component to drive this projectile's movement.
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		ProjectileMovementComponent->InitialSpeed = 3000.0f;
+		ProjectileMovementComponent->InitialSpeed = 3000.0f; // initially 0
 		ProjectileMovementComponent->MaxSpeed = 3000.0f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = true;
@@ -87,6 +87,10 @@ void ADodgeball::FireInDirection(const FVector& ShootDirection)
 
 void ADodgeball::SetOwnerType(CharacterType Type)
 {
+	if (Type == CharacterType::Spawner)
+	{
+		ProjectileMovementComponent->SetVelocityInLocalSpace(*(new FVector(0.0f, 0.0f, 0.0f)));
+	}
 	OwnerType = Type;
 }
 
@@ -108,6 +112,8 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				// {
 				// 	Wolfie->OnDamaged();
 				// }
+
+				Destroy();
 			}
 			// Hit Guard Wolfie.
 			else if (OtherActor->ActorHasTag(FName(TEXT("Guard"))))
@@ -118,8 +124,9 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				// {
 				// 	Guard->OnDamaged();
 				// }
+
+				Destroy();
 			}
-			Destroy();
 		}
 
 		// Guard Wolfie throw the ball.
@@ -133,8 +140,8 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 					// Player->OnDamaged();
 				}
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] hit by [Guard]"));
+				Destroy();
 			}
-			Destroy();
 		}
 
 		// Pick up the ball.
@@ -147,6 +154,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 					// Player->PickUpBall();
 				}
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] Pick up the ball."));
+				Destroy();
 			}
 			else if (OtherActor->ActorHasTag(FName(TEXT("Guard"))))
 			{
@@ -155,12 +163,13 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				// 	Guard->PickUpBall();
 				// }
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] Pick up the ball."));
+				Destroy();
 			}
 			else if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
 				GEngine->AddOnScreenDebugMessage(01, 5.0f, FColor::Blue, TEXT("[Wolfie] Pick up the ball."));
+				Destroy();
 			}
-			Destroy();
 		}
 
 		else

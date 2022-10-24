@@ -10,27 +10,21 @@ AWBallSpawner::AWBallSpawner()
 	PrimaryActorTick.bCanEverTick = false;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
-	SpawnVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnVolume"));
-	SpawnVolume->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-
 }
 
 // Called when the game starts or when spawned
 void AWBallSpawner::BeginPlay()
 {
 	Super::BeginPlay();	
+	GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &AWBallSpawner::SpawnBall, 1.0f, true, 2.0f);
+
+
 }
 
 // Called every frame
 void AWBallSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	// AWolfieDodgeballGameModeBase* gameMode = Cast<AWolfieDodgeballGameModeBase>(UGameplayStatics::GetGameMode(this));
-	// if (GameMode)
-	// {
-	// 	GameMode.CurBallCount++;
-	// }
 }
 
 void AWBallSpawner::SpawnBall()
@@ -38,5 +32,15 @@ void AWBallSpawner::SpawnBall()
 	FVector SpawnLocation = GetActorLocation();
 	FRotator SpawnRotation = GetActorRotation();
 
-	GetWorld()->SpawnActor<ADodgeball>(SpawnLocation, SpawnRotation);
+	FVector RandomLocation = SpawnLocation + (FMath::VRand()*500);
+	ADodgeball* Ball = GetWorld()->SpawnActor<ADodgeball>(RandomLocation, SpawnRotation);
+	
+	if (Ball != nullptr)
+	{
+		Ball->SetOwnerType(CharacterType::Spawner);
+	}
+
+	check(GEngine);
+
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("Spawn ball"));
 }

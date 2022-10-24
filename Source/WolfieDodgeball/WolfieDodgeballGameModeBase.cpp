@@ -17,7 +17,6 @@ void AWolfieDodgeballGameModeBase::StartPlay()
 	CurBallCount = 0;
 	MaxBallCount = 20;
 
-	GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &AWBallSpawner::SpawnBall, 1.0f, true, 2.0f);
 }
 
 void AWolfieDodgeballGameModeBase::GameEnd()
