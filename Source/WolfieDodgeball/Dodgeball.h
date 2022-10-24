@@ -54,6 +54,9 @@ public:
 	UPROPERTY(EditAnyWhere)
 	CharacterType OwnerType;
 
+	UPROPERTY(VisibleAnywhere)
+	UPrimitiveComponent* PrimitiveComponent;
+
 	// Function that initializes the projectile's velocity in the shoot direction.
 	void FireInDirection(const FVector& ShootDirection);
 

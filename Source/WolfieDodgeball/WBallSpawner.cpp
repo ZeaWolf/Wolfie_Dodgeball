@@ -16,7 +16,7 @@ AWBallSpawner::AWBallSpawner()
 void AWBallSpawner::BeginPlay()
 {
 	Super::BeginPlay();	
-	GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &AWBallSpawner::SpawnBall, 1.0f, true, 2.0f);
+	GetWorldTimerManager().SetTimer(MemberTimerHandle, this, &AWBallSpawner::SpawnBall, 3.0f, true, 2.0f);
 
 
 }
@@ -32,15 +32,11 @@ void AWBallSpawner::SpawnBall()
 	FVector SpawnLocation = GetActorLocation();
 	FRotator SpawnRotation = GetActorRotation();
 
-	FVector RandomLocation = SpawnLocation + (FMath::VRand()*500);
+	FVector RandomLocation = SpawnLocation + (FMath::VRand()*50);
 	ADodgeball* Ball = GetWorld()->SpawnActor<ADodgeball>(RandomLocation, SpawnRotation);
 	
 	if (Ball != nullptr)
 	{
 		Ball->SetOwnerType(CharacterType::Spawner);
 	}
-
-	check(GEngine);
-
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("Spawn ball"));
 }

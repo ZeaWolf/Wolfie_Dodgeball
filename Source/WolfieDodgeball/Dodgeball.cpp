@@ -9,6 +9,10 @@ ADodgeball::ADodgeball()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	if (!PrimitiveComponent)
+	{
+		PrimitiveComponent = CreateDefaultSubobject<UPrimitiveComponent>(TEXT("PrimitiveComponent"));
+	}
 	if (!RootComponent)
 	{
 		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSceneComponent"));
@@ -22,7 +26,7 @@ ADodgeball::ADodgeball()
 		// Event called when component hits something.
 		CollisionComponent->OnComponentHit.AddDynamic(this, &ADodgeball::OnHit);
 		// Set the sphere's collision radius.
-		CollisionComponent->InitSphereRadius(15.0f);
+		CollisionComponent->InitSphereRadius(20.0f);
 		// Set the root component to be the collision component.
 		RootComponent = CollisionComponent;
 	}
@@ -30,15 +34,17 @@ ADodgeball::ADodgeball()
 	if (!ProjectileMovementComponent)
 	{
 		// Use this component to drive this projectile's movement.
-		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
-		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		ProjectileMovementComponent->InitialSpeed = 3000.0f; // initially 0
-		ProjectileMovementComponent->MaxSpeed = 3000.0f;
-		ProjectileMovementComponent->bRotationFollowsVelocity = true;
-		ProjectileMovementComponent->bShouldBounce = true;
-		ProjectileMovementComponent->Bounciness = 0.3f;
-		ProjectileMovementComponent->ProjectileGravityScale = 3.0f;
+		// ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
+		// ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
+		// ProjectileMovementComponent->InitialSpeed = 3000.0f; // initially 0
+		// ProjectileMovementComponent->MaxSpeed = 3000.0f;
+		// ProjectileMovementComponent->bRotationFollowsVelocity = true;
+		// ProjectileMovementComponent->bShouldBounce = true;
+		// ProjectileMovementComponent->Bounciness = 0.3f;
+		// ProjectileMovementComponent->ProjectileGravityScale = 3.0f;
 	}
+
+
 
 	if (!ProjectileMeshComponent)
 	{
@@ -62,7 +68,7 @@ ADodgeball::ADodgeball()
 	// Delete the projectile after 3 seconds.
 	InitialLifeSpan = 10.0f;
 
-	OwnerType = CharacterType::Player;
+	OwnerType = CharacterType::Guard;
 }
 
 // Called when the game starts or when spawned
@@ -82,14 +88,18 @@ void ADodgeball::Tick(float DeltaTime)
 // Function that initializes the projectile's velocity in the shoot direction.
 void ADodgeball::FireInDirection(const FVector& ShootDirection)
 {
-	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+	if (PrimitiveComponent->IsValidLowLevelFast())
+	{
+		// ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+		PrimitiveComponent->AddImpulse(ShootDirection * 1000.0f, NAME_None, true);
+	}
 }
 
 void ADodgeball::SetOwnerType(CharacterType Type)
 {
 	if (Type == CharacterType::Spawner)
 	{
-		ProjectileMovementComponent->SetVelocityInLocalSpace(*(new FVector(0.0f, 0.0f, 0.0f)));
+		// ProjectileMovementComponent->SetVelocityInLocalSpace(*(new FVector(0.0f, 0.0f, 0.0f)));
 	}
 	OwnerType = Type;
 }
