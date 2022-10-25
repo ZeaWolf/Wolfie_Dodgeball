@@ -34,14 +34,14 @@ ADodgeball::ADodgeball()
 	if (!ProjectileMovementComponent)
 	{
 		// Use this component to drive this projectile's movement.
-		// ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
-		// ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		// ProjectileMovementComponent->InitialSpeed = 3000.0f; // initially 0
-		// ProjectileMovementComponent->MaxSpeed = 3000.0f;
-		// ProjectileMovementComponent->bRotationFollowsVelocity = true;
-		// ProjectileMovementComponent->bShouldBounce = true;
-		// ProjectileMovementComponent->Bounciness = 0.3f;
-		// ProjectileMovementComponent->ProjectileGravityScale = 3.0f;
+		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
+		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
+		ProjectileMovementComponent->InitialSpeed = 3000.0f; // initially 0
+		ProjectileMovementComponent->MaxSpeed = 3000.0f;
+		ProjectileMovementComponent->bRotationFollowsVelocity = true;
+		ProjectileMovementComponent->bShouldBounce = true;
+		ProjectileMovementComponent->Bounciness = 0.3f;
+		ProjectileMovementComponent->ProjectileGravityScale = 3.0f;
 	}
 
 
@@ -88,11 +88,7 @@ void ADodgeball::Tick(float DeltaTime)
 // Function that initializes the projectile's velocity in the shoot direction.
 void ADodgeball::FireInDirection(const FVector& ShootDirection)
 {
-	if (PrimitiveComponent->IsValidLowLevelFast())
-	{
-		// ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
-		PrimitiveComponent->AddImpulse(ShootDirection * 1000.0f, NAME_None, true);
-	}
+	CollisionComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 1000.0f, ShootDirection);
 }
 
 void ADodgeball::SetOwnerType(CharacterType Type)
