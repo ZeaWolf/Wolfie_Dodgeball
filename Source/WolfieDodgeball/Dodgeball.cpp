@@ -9,6 +9,10 @@ ADodgeball::ADodgeball()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	if (!PrimitiveComponent)
+	{
+		PrimitiveComponent = CreateDefaultSubobject<UPrimitiveComponent>(TEXT("PrimitiveComponent"));
+	}
 	if (!RootComponent)
 	{
 		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSceneComponent"));
@@ -22,7 +26,7 @@ ADodgeball::ADodgeball()
 		// Event called when component hits something.
 		CollisionComponent->OnComponentHit.AddDynamic(this, &ADodgeball::OnHit);
 		// Set the sphere's collision radius.
-		CollisionComponent->InitSphereRadius(15.0f);
+		CollisionComponent->InitSphereRadius(20.0f);
 		// Set the root component to be the collision component.
 		RootComponent = CollisionComponent;
 	}
@@ -39,6 +43,8 @@ ADodgeball::ADodgeball()
 		ProjectileMovementComponent->Bounciness = 0.3f;
 		ProjectileMovementComponent->ProjectileGravityScale = 3.0f;
 	}
+
+
 
 	if (!ProjectileMeshComponent)
 	{
@@ -82,7 +88,7 @@ void ADodgeball::Tick(float DeltaTime)
 // Function that initializes the projectile's velocity in the shoot direction.
 void ADodgeball::FireInDirection(const FVector& ShootDirection)
 {
-	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+
 }
 
 void ADodgeball::SetOwnerType(CharacterType Type)
@@ -124,6 +130,11 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				// {
 				// 	Guard->OnDamaged();
 				// }
+
+				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
+				{
+					// Player->AddPoint();
+				}
 
 				Destroy();
 			}
