@@ -75,6 +75,9 @@ DerivedDataCache/*
 
 Content/Wolfie3D
 
+Source/WolfieDodgeball.Target.cs
+Source/WolfieDodgeballEditor.Target.cs
+
 # for vscode 
 .DS_Store
 .ignore
