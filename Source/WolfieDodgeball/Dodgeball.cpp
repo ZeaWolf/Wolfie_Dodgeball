@@ -131,6 +131,11 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				// 	Guard->OnDamaged();
 				// }
 
+				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
+				{
+					// Player->AddPoint();
+				}
+
 				Destroy();
 			}
 		}
