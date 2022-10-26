@@ -32,7 +32,7 @@ void AWBallSpawner::SpawnBall()
 	FVector SpawnLocation = GetActorLocation();
 	FRotator SpawnRotation = GetActorRotation();
 
-	FVector RandomLocation = SpawnLocation + (FMath::VRand()*50);
+	FVector RandomLocation = SpawnLocation + (FMath::VRand()*300);
 	ADodgeball* Ball = GetWorld()->SpawnActor<ADodgeball>(RandomLocation, SpawnRotation);
 	
 	if (Ball != nullptr)
