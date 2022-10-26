@@ -2,6 +2,8 @@
 
 
 #include "Dodgeball.h"
+#include "WolfieCharacter.h"
+#include "GuardWolfie.h"
 
 // Sets default values
 ADodgeball::ADodgeball()
@@ -36,12 +38,12 @@ ADodgeball::ADodgeball()
 		// Use this component to drive this projectile's movement.
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		ProjectileMovementComponent->InitialSpeed = 3000.0f; // initially 0
+		ProjectileMovementComponent->InitialSpeed = 30000.0f; // initially 0
 		ProjectileMovementComponent->MaxSpeed = 3000.0f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = true;
 		ProjectileMovementComponent->Bounciness = 0.3f;
-		ProjectileMovementComponent->ProjectileGravityScale = 3.0f;
+		ProjectileMovementComponent->ProjectileGravityScale = 2.0f;
 	}
 
 
@@ -88,7 +90,7 @@ void ADodgeball::Tick(float DeltaTime)
 // Function that initializes the projectile's velocity in the shoot direction.
 void ADodgeball::FireInDirection(const FVector& ShootDirection)
 {
-
+	ProjectileMovementComponent->Velocity = ShootDirection* ProjectileMovementComponent->InitialSpeed;
 }
 
 void ADodgeball::SetOwnerType(CharacterType Type)
@@ -126,10 +128,10 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] hit by [Player]"));
 
-				// if (GuardWolfieClass* Guard = Cast<GuardWolfieClass>(OtherActor))
-				// {
-				// 	Guard->OnDamaged();
-				// }
+				if (AGuardWolfie* Guard = Cast<AGuardWolfie>(OtherActor))
+				{
+					Guard->OnDamaged();
+				}
 
 				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
 				{
@@ -162,19 +164,23 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			{
 				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
 				{
-					// Player->PickUpBall();
+					if (!Player->GetHolding()) {
+						Player->PickUpBall();
+					}
 				}
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] Pick up the ball."));
 				Destroy();
 			}
 			else if (OtherActor->ActorHasTag(FName(TEXT("Guard"))))
 			{
-				// if (GuardWolfieClass* Guard = Cast<GuardWolfieCharacter>(OtherActor))
-				// {
-				// 	Guard->PickUpBall();
-				// }
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] Pick up the ball."));
-				Destroy();
+				if (AGuardWolfie* Guard = Cast<AGuardWolfie>(OtherActor))
+				 {
+					if (!Guard->GetHolding()) {
+						Guard->PickUpBall();
+						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] Pick up the ball."));
+						Destroy();
+					}
+				 }
 			}
 			else if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
@@ -189,3 +195,4 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 		}
 	}
 }
+

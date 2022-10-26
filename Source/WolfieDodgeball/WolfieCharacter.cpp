@@ -38,6 +38,8 @@ AWolfieCharacter::AWolfieCharacter()
 
 	// The owning player doesn't see the regular (third-person) body mesh.
 	GetMesh()->SetOwnerNoSee(true);
+
+	this->isHolding = false;
 }
 
 // Called when the game starts or when spawned
@@ -77,6 +79,8 @@ void AWolfieCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AWolfieCharacter::StopJump);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AWolfieCharacter::Fire);
+
+	//PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AWolfieCharacter::Interact);
 }
 
 
@@ -106,8 +110,9 @@ void AWolfieCharacter::StopJump()
 
 void AWolfieCharacter::Fire()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Current: %p"), ProjectileClass);
 	// Attempt to fire a projectile.
-	if (ProjectileClass)
+	if (ProjectileClass && GetHolding())
 	{
 		// Get the camera transform.
 		FVector CameraLocation;
@@ -135,10 +140,51 @@ void AWolfieCharacter::Fire()
 			ADodgeball* Projectile = World->SpawnActor<ADodgeball>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 			if (Projectile)
 			{
+				Projectile->SetOwnerType(CharacterType::Player);
 				// Set the projectile's initial trajectory.
 				FVector LaunchDirection = MuzzleRotation.Vector();
 				Projectile->FireInDirection(LaunchDirection);
+
+				ToggleHolding();
 			}
 		}
 	}
+}
+
+//void Awolfiecharacter::interact()
+//{
+//	gengine->addonscreendebugmessage(-1, 5.0f, fcolor::red, text("interacting"));
+//	//ue_log(logtemp, warning, text("interacting"));
+//	fvector cameralocation;
+//	frotator camerarotation;
+//	getactoreyesviewpoint(cameralocation, camerarotation);
+//
+//	fvector end = cameralocation + camerarotation.vector() * 500.0f;
+//
+//	fhitresult hitresult;
+//	fcollisionqueryparams params;
+//	params.addignoredactor(this);
+//
+//
+//	if (getworld()->linetracesinglebychannel(hitresult, cameralocation, end, ecollisionchannel::ecc_worldstatic))
+//	{
+//		//gengine->addonscreendebugmessage(-1, 5.0f, fcolor::red, text("hit actor %s"), *hitresult.getactor()->getname());
+//		ue_log(logtemp, warning, text("hit actor %s"), *hitresult.getactor()->getname());
+//	}
+//}
+bool AWolfieCharacter::GetHolding() {
+	return isHolding;
+}
+void AWolfieCharacter::ToggleHolding()
+{
+	if (GetHolding())
+		isHolding = false;
+	else
+		isHolding = true;
+}
+
+void AWolfieCharacter::PickUpBall()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Player pick up the ball."));
+	ToggleHolding();
 }

@@ -33,3 +33,10 @@ void ATrueWolfie::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+
+void ATrueWolfie::OnDamaged()
+{
+	Destroy();
+
+	//End the Game;
+}

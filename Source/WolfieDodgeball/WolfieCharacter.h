@@ -23,8 +23,13 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Projectile class to spawn.
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	UPROPERTY(EditDefaultsOnly, Category = Dodgeball)
 	TSubclassOf<class ADodgeball> ProjectileClass;
+
+	// Boolean whether character holds ball;
+	bool isHolding;
+
+	int FinalScore;
 
 public:	
 	// Called every frame
@@ -52,6 +57,20 @@ public:
 	// Function that handles firing projectiles.
 	UFUNCTION()
 	void Fire();
+
+	//Function that handles interact.
+	//UFUNCTION()
+	//void Interact();
+
+	// Function that handles pick up.
+	UFUNCTION()
+	void PickUpBall();
+
+	UFUNCTION()
+	void ToggleHolding();
+
+	UFUNCTION()
+	bool GetHolding();
 
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)

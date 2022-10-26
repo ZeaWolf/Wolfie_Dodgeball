@@ -7,7 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "WState.h"
-#include "WolfieCharacter.h"
+
 #include "Dodgeball.generated.h"
 
 UCLASS()
