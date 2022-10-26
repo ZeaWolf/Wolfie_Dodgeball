@@ -68,7 +68,7 @@ ADodgeball::ADodgeball()
 	// Delete the projectile after 3 seconds.
 	InitialLifeSpan = 10.0f;
 
-	OwnerType = CharacterType::Guard;
+	OwnerType = CharacterType::Player;
 }
 
 // Called when the game starts or when spawned
@@ -88,14 +88,14 @@ void ADodgeball::Tick(float DeltaTime)
 // Function that initializes the projectile's velocity in the shoot direction.
 void ADodgeball::FireInDirection(const FVector& ShootDirection)
 {
-	CollisionComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 1000.0f, ShootDirection);
+
 }
 
 void ADodgeball::SetOwnerType(CharacterType Type)
 {
 	if (Type == CharacterType::Spawner)
 	{
-		// ProjectileMovementComponent->SetVelocityInLocalSpace(*(new FVector(0.0f, 0.0f, 0.0f)));
+		ProjectileMovementComponent->SetVelocityInLocalSpace(*(new FVector(0.0f, 0.0f, 0.0f)));
 	}
 	OwnerType = Type;
 }
