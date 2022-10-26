@@ -185,6 +185,22 @@ void AWolfieCharacter::ToggleHolding()
 
 void AWolfieCharacter::PickUpBall()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Player pick up the ball."));
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("[Player] pick up the ball."));
 	ToggleHolding();
+}
+
+
+void AWolfieCharacter::OnDamaged()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("[Player] hit by [Guard Wolfie]"));
+
+	// Lose
+
+
+}
+
+void AWolfieCharacter::AddPoint()
+{
+	Score += 1;
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Score: %f", Score));
 }

@@ -36,6 +36,7 @@ void ATrueWolfie::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ATrueWolfie::OnDamaged()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("[True Wolfie] hit by [Player]"));
 	Destroy();
 
 	//End the Game;

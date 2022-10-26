@@ -29,7 +29,7 @@ protected:
 	// Boolean whether character holds ball;
 	bool isHolding;
 
-	int FinalScore;
+	int Score;
 
 public:	
 	// Called every frame
@@ -71,6 +71,12 @@ public:
 
 	UFUNCTION()
 	bool GetHolding();
+
+	UFUNCTION()
+	void OnDamaged();
+
+	UFUNCTION()
+	void AddPoint();
 
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)

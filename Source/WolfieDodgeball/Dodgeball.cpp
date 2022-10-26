@@ -4,6 +4,7 @@
 #include "Dodgeball.h"
 #include "WolfieCharacter.h"
 #include "GuardWolfie.h"
+#include "TrueWolfie.h"
 
 // Sets default values
 ADodgeball::ADodgeball()
@@ -114,14 +115,13 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			// Hit Main Wolfie.
 			if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Wolfie] hit by [Player]"));
+				//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Wolfie] hit by [Player]"));
 				
-				// if (MainWolfieClass* Wolfie = Cast<MainWolfieClass>(OtherActor))
-				// {
-				// 	Wolfie->OnDamaged();
-				// }
-
-				Destroy();
+				 if (ATrueWolfie* Wolfie = Cast<ATrueWolfie>(OtherActor))
+				 {
+				 	Wolfie->OnDamaged();
+					this->SetOwnerType(CharacterType::None);
+				 }
 			}
 			// Hit Guard Wolfie.
 			else if (OtherActor->ActorHasTag(FName(TEXT("Guard"))))
@@ -131,11 +131,12 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				if (AGuardWolfie* Guard = Cast<AGuardWolfie>(OtherActor))
 				{
 					Guard->OnDamaged();
+					this->SetOwnerType(CharacterType::None);
 				}
 
 				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
 				{
-					// Player->AddPoint();
+					//Player->AddPoint();
 				}
 
 				Destroy();
@@ -148,12 +149,14 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			// Hit Player.
 			if (OtherActor->ActorHasTag(FName(TEXT("Player"))))
 			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("[Player] hit by [Guard Wolfie]"));
 				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
 				{
-					// Player->OnDamaged();
+					Player->OnDamaged();
+					this->SetOwnerType(CharacterType::None);
 				}
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] hit by [Guard]"));
-				Destroy();
+				//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] hit by [Guard]"));
+				//Destroy();
 			}
 		}
 
@@ -166,10 +169,10 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				{
 					if (!Player->GetHolding()) {
 						Player->PickUpBall();
+						Destroy();
 					}
 				}
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] Pick up the ball."));
-				Destroy();
+				//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Player] Pick up the ball."));
 			}
 			else if (OtherActor->ActorHasTag(FName(TEXT("Guard"))))
 			{
@@ -177,15 +180,15 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 				 {
 					if (!Guard->GetHolding()) {
 						Guard->PickUpBall();
-						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] Pick up the ball."));
+						//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] Pick up the ball."));
 						Destroy();
 					}
 				 }
 			}
 			else if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
-				GEngine->AddOnScreenDebugMessage(01, 5.0f, FColor::Blue, TEXT("[Wolfie] Pick up the ball."));
-				Destroy();
+				//GEngine->AddOnScreenDebugMessage(01, 5.0f, FColor::Blue, TEXT("[Wolfie] Pick up the ball."));
+				//Destroy();
 			}
 		}
 
