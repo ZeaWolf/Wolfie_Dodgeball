@@ -2,6 +2,7 @@
 
 
 #include "WolfieCharacter.h"
+#include "WolfieDodgeballGameModeBase.h"
 
 // Sets default values
 AWolfieCharacter::AWolfieCharacter()
@@ -39,7 +40,8 @@ AWolfieCharacter::AWolfieCharacter()
 	// The owning player doesn't see the regular (third-person) body mesh.
 	GetMesh()->SetOwnerNoSee(true);
 
-	this->isHolding = false;
+	Score = 0;
+	isHolding = false;
 }
 
 // Called when the game starts or when spawned
@@ -110,7 +112,8 @@ void AWolfieCharacter::StopJump()
 
 void AWolfieCharacter::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Current: %p"), ProjectileClass);
+	//UE_LOG(LogTemp, Warning, TEXT("Current Score: %d"), Score);
+	// UE_LOG(LogTemp, Warning, TEXT("Current: %p"), ProjectileClass);
 	// Attempt to fire a projectile.
 	if (ProjectileClass && GetHolding())
 	{
@@ -196,11 +199,11 @@ void AWolfieCharacter::OnDamaged()
 
 	// Lose
 
-
 }
 
 void AWolfieCharacter::AddPoint()
 {
-	Score += 1;
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Score: %f", Score));
+	Score = Score + 1;
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Score: %f", myGameMode->Score;));
+	UE_LOG(LogTemp, Warning, TEXT("Current Score in charater: %d"), Score);
 }

@@ -107,6 +107,16 @@ void ADodgeball::SetOwnerType(CharacterType Type)
 void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	check(GEngine != nullptr);
+
+	UWorld* World = GetWorld();
+	AWolfieCharacter* myPawn = nullptr;
+	AWolfieDodgeballGameModeBase* myGameMode = nullptr;
+	if (World)
+	{
+		myGameMode = (AWolfieDodgeballGameModeBase*)World->GetAuthGameMode();
+		myPawn = Cast<AWolfieCharacter>(myGameMode->DefaultPawnClass.GetDefaultObject());
+	}
+
 	if (OtherActor != this)
 	{
 		// Player throw the ball.
@@ -116,7 +126,10 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
 				//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Wolfie] hit by [Player]"));
-				
+				if (myPawn) {
+					myPawn->AddPoint();
+				}
+
 				 if (ATrueWolfie* Wolfie = Cast<ATrueWolfie>(OtherActor))
 				 {
 				 	Wolfie->OnDamaged();
@@ -128,15 +141,15 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Guard] hit by [Player]"));
 
+				if (myPawn) {
+					myPawn->AddPoint();
+				}
+				
+
 				if (AGuardWolfie* Guard = Cast<AGuardWolfie>(OtherActor))
 				{
 					Guard->OnDamaged();
 					this->SetOwnerType(CharacterType::None);
-				}
-
-				if (AWolfieCharacter* Player = Cast<AWolfieCharacter>(OtherActor))
-				{
-					//Player->AddPoint();
 				}
 
 				Destroy();
