@@ -81,13 +81,6 @@ void AGuardWolfie::OnFire()
 		// Transform MuzzleOffset from camera space to world space.
 		FVector MuzzleLocation = GuardLocation + FTransform(GuardRotation).TransformVector(MuzzleOffset);
 
-		class AWolfieCharacter* myPawn = Cast<AWolfieCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
-		FVector PlayerLocation;
-		FRotator PlayerRotation;
-		myPawn->GetActorEyesViewPoint(PlayerLocation, PlayerRotation);
-		//UE_LOG(LogTemp, Warning, TEXT("player: %s"), *PlayerLocation.ToString());
-		//UE_LOG(LogTemp, Warning, TEXT("player: %s"), *GuardLocation.ToString());
-
 
 		// Skew the aim to be slightly upwards.
 		FRotator MuzzleRotation = GuardRotation;
@@ -100,6 +93,14 @@ void AGuardWolfie::OnFire()
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = GetInstigator();
 
+			class AWolfieDodgeballGameModeBase* myGameMode = (AWolfieDodgeballGameModeBase*)World->GetAuthGameMode();
+			class AWolfieCharacter* myPawn = Cast<AWolfieCharacter>(myGameMode->DefaultPawnClass.GetDefaultObject());
+			FVector PlayerLocation;
+			FRotator PlayerRotation;
+			myPawn->GetActorEyesViewPoint(PlayerLocation, PlayerRotation);
+			//UE_LOG(LogTemp, Warning, TEXT("player: %s"), *PlayerLocation.ToString());
+			//UE_LOG(LogTemp, Warning, TEXT("player: %s"), *GuardLocation.ToString());
+	
 			// Spawn the projectile at the muzzle.
 			ADodgeball* Projectile = World->SpawnActor<ADodgeball>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 			if (Projectile)
