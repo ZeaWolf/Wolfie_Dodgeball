@@ -114,10 +114,11 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 	if (World)
 	{
 		myGameMode = (AWolfieDodgeballGameModeBase*)World->GetAuthGameMode();
-		myPawn = Cast<AWolfieCharacter>(myGameMode->DefaultPawnClass.GetDefaultObject());
+		// myPawn = Cast<AWolfieCharacter>(myGameMode->DefaultPawnClass.GetDefaultObject());
+		myPawn = Cast<AWolfieCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	}
 
-	if (OtherActor != this)
+	if (OtherActor != nullptr)
 	{
 		// Player throw the ball.
 		if (OwnerType == CharacterType::Player && OtherActor->IsValidLowLevelFast())
@@ -126,7 +127,7 @@ void ADodgeball::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			if (OtherActor->ActorHasTag(FName(TEXT("Wolfie"))))
 			{
 				//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("[Wolfie] hit by [Player]"));
-				if (myPawn) {
+				if (myPawn->IsValidLowLevel()) {
 					myPawn->AddPoint();
 				}
 

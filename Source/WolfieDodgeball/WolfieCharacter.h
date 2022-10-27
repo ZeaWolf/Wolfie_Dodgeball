@@ -29,7 +29,8 @@ protected:
 	// Boolean whether character holds ball;
 	bool isHolding;
 
-	int Score;
+	UPROPERTY(EditAnywhere)
+	int WScore;
 
 public:	
 	// Called every frame

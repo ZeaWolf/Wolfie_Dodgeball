@@ -81,8 +81,7 @@ void AGuardWolfie::OnFire()
 		// Transform MuzzleOffset from camera space to world space.
 		FVector MuzzleLocation = GuardLocation + FTransform(GuardRotation).TransformVector(MuzzleOffset);
 
-		class AWolfieDodgeballGameModeBase* myGameMode = (AWolfieDodgeballGameModeBase*)GetWorld()->GetAuthGameMode();
-		class AWolfieCharacter* myPawn = Cast<AWolfieCharacter>(myGameMode->DefaultPawnClass.GetDefaultObject());
+		class AWolfieCharacter* myPawn = Cast<AWolfieCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 		FVector PlayerLocation;
 		FRotator PlayerRotation;
 		myPawn->GetActorEyesViewPoint(PlayerLocation, PlayerRotation);

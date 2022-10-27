@@ -40,7 +40,7 @@ AWolfieCharacter::AWolfieCharacter()
 	// The owning player doesn't see the regular (third-person) body mesh.
 	GetMesh()->SetOwnerNoSee(true);
 
-	Score = 0;
+	
 	isHolding = false;
 }
 
@@ -48,12 +48,13 @@ AWolfieCharacter::AWolfieCharacter()
 void AWolfieCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	WScore = 0;
+	UE_LOG(LogTemp, Warning, TEXT("START: %d"), WScore);
 	
 	check(GEngine != nullptr);
 
 	// Display a debug message for five seconds. 
 	// The -1 "Key" value argument prevents the message from being updated or refreshed.
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("We are using WolfieCharacter."));
 }
 
 // Called every frame
@@ -203,7 +204,7 @@ void AWolfieCharacter::OnDamaged()
 
 void AWolfieCharacter::AddPoint()
 {
-	Score = Score + 1;
+	WScore = WScore + 1;
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Score: %f", myGameMode->Score;));
-	UE_LOG(LogTemp, Warning, TEXT("Current Score in charater: %d"), Score);
+	UE_LOG(LogTemp, Warning, TEXT("Current Score in charater: %d"), WScore);
 }
