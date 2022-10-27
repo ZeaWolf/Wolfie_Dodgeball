@@ -29,7 +29,7 @@ protected:
 	// Boolean whether character holds ball;
 	bool isHolding;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int WScore;
 
 public:	
@@ -78,6 +78,9 @@ public:
 
 	UFUNCTION()
 	void AddPoint();
+
+	//UFUNCTION(BlueprintCallable)
+	//	void GameLose();
 
 	// FPS camera.
 	UPROPERTY(VisibleAnywhere)

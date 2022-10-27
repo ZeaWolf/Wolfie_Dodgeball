@@ -199,12 +199,18 @@ void AWolfieCharacter::OnDamaged()
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("[Player] hit by [Guard Wolfie]"));
 
 	// Lose
+	Destroy();
 
 }
 
 void AWolfieCharacter::AddPoint()
 {
 	WScore = WScore + 1;
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Score: %f", myGameMode->Score;));
-	UE_LOG(LogTemp, Warning, TEXT("Current Score in charater: %d"), WScore);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, GetWorld()->GetName());
+	//UE_LOG(LogTemp, Warning, GetWorld()->GetName());
 }
+
+
+//void AWolfieCharacter::GameLose() {
+//	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("Game Over"));
+//}
